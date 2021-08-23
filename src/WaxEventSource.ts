@@ -9,6 +9,7 @@ export class WaxEventSource {
     message?: any,
     win?: Window
   ): Promise<any> {
+    Lol.done = true;
     const openedWindow = win
       ? win
       : await window.open(url, "WaxPopup", "height=800,width=600");
@@ -55,6 +56,22 @@ export class WaxEventSource {
       (window as Window).addEventListener(
         "message",
         async function onEvent(event) {
+          console.log("rec event: "+event.data.type)
+          //console.log(event.data)
+          if(event.data.type=="READY"){
+            if(Lol.done== true){
+              Lol.done = false;
+            }
+            else {
+              console.log("rejected")
+              return
+            }
+          }
+          console.log("accepted")
+          
+          if(event.data.type=="TX_SIGNED"){
+            Lol.done = true;
+          }
           // Validate expected origin for event
           if (event.origin !== origin) {
             return;
@@ -91,4 +108,8 @@ export class WaxEventSource {
       }, 2000);
     });
   };
+}
+
+class Lol {
+  static done: boolean = true;
 }

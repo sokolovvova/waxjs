@@ -94,6 +94,7 @@ export class WaxJS {
   }
 
   private async loginViaWindow() {
+    console.log("v11")
     const confirmationWindow = await this.waxEventSource.openEventSource(
       this.waxSigningURL + "/cloud-wallet/login/"
     );
@@ -282,11 +283,13 @@ export class WaxJS {
     window: Window,
     { transaction, freeBandwidth }: { transaction: any; freeBandwidth: boolean }
   ) {
+    //console.log("start window signing")
     const confirmationWindow: Window = await this.waxEventSource.openEventSource(
       this.waxSigningURL + "/cloud-wallet/signing/",
       { type: "TRANSACTION", transaction, freeBandwidth },
       window
     );
+    //console.log("return")
 
     return this.waxEventSource.onceEvent(
       confirmationWindow,
@@ -296,6 +299,7 @@ export class WaxJS {
   }
 
   private async receiveSignatures(event: any): Promise<any> {
+    //console.log(event.data.type);
     if (event.data.type === "TX_SIGNED") {
       const {
         verified,
